@@ -1,5 +1,12 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { AppProviders } from "./app/providers";
 import "./styles/globals.css";
 
-createRoot(document.getElementById("root")!).render(<StrictMode></StrictMode>);
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <AppProviders>
+      <div>Hello World</div>
+    </AppProviders>
+  </StrictMode>,
+);
