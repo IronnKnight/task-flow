@@ -19,6 +19,7 @@ import type {
   UpdateTaskPayload,
 } from "@/features/tasks/types";
 import type { RootState } from "@/app/store";
+import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
 const tasksAdapter = createEntityAdapter<Task>({
   sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
@@ -29,14 +30,6 @@ const initialState = tasksAdapter.getInitialState<TasksStateMeta>({
   error: null,
   filter: "all",
 });
-
-const toErrorMessage = (error: unknown): string => {
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return "Unexpected tasks error";
-};
 
 export const fetchTasks = createAsyncThunk<Task[]>("tasks/fetchTasks", async () => {
   return fetchTasksRequest();
@@ -81,7 +74,7 @@ const tasksSlice = createSlice({
       })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.status = "error";
-        state.error = toErrorMessage(action.error);
+        state.error = getErrorMessage(action.error, "Unexpected tasks error");
       })
       .addCase(createTask.pending, (state) => {
         state.status = "loading";
@@ -94,7 +87,7 @@ const tasksSlice = createSlice({
       })
       .addCase(createTask.rejected, (state, action) => {
         state.status = "error";
-        state.error = toErrorMessage(action.error);
+        state.error = getErrorMessage(action.error, "Unexpected tasks error");
       })
       .addCase(updateTask.pending, (state) => {
         state.status = "loading";
@@ -107,7 +100,7 @@ const tasksSlice = createSlice({
       })
       .addCase(updateTask.rejected, (state, action) => {
         state.status = "error";
-        state.error = toErrorMessage(action.error);
+        state.error = getErrorMessage(action.error, "Unexpected tasks error");
       })
       .addCase(deleteTask.pending, (state) => {
         state.status = "loading";
@@ -120,7 +113,7 @@ const tasksSlice = createSlice({
       })
       .addCase(deleteTask.rejected, (state, action) => {
         state.status = "error";
-        state.error = toErrorMessage(action.error);
+        state.error = getErrorMessage(action.error, "Unexpected tasks error");
       });
   },
 });

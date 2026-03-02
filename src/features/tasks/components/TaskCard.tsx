@@ -1,6 +1,7 @@
 import { useAppDispatch } from "@/app/hooks";
 import { deleteTask, updateTask } from "@/features/tasks/tasksSlice";
 import type { Task, TaskStatus } from "@/features/tasks/types";
+import { Button } from "@/shared/components";
 
 type TaskCardProps = {
   task: Task;
@@ -42,9 +43,9 @@ export const TaskCard = ({ task }: TaskCardProps) => {
         ))}
       </select>
 
-      <button type="button" onClick={handleDelete}>
+      <Button type="button" onClick={handleDelete}>
         Delete
-      </button>
+      </Button>
     </article>
   );
 };

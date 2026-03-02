@@ -3,6 +3,19 @@ import type { AuthUser, LoginPayload } from "@/features/auth/types";
 
 const STORAGE_KEY = "task-flow-auth-user";
 
+const isAuthUser = (value: unknown): value is AuthUser => {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const candidate = value as Record<string, unknown>;
+
+  return (
+    typeof candidate.id === "string" &&
+    typeof candidate.email === "string"
+  );
+};
+
 export const loginRequest = async (payload: LoginPayload): Promise<AuthUser> => {
   await delay(500);
 
@@ -37,7 +50,14 @@ export const getCurrentUserRequest = async (): Promise<AuthUser | null> => {
   }
 
   try {
-    return JSON.parse(stored) as AuthUser;
+    const parsed = JSON.parse(stored) as unknown;
+
+    if (!isAuthUser(parsed)) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+
+    return parsed;
   } catch {
     localStorage.removeItem(STORAGE_KEY);
     return null;

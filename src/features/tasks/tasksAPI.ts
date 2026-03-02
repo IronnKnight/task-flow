@@ -2,6 +2,25 @@ import { delay } from "@/shared/utils/delay";
 import type { CreateTaskPayload, Task, UpdateTaskPayload } from "@/features/tasks/types";
 
 const STORAGE_KEY = "task-flow-tasks";
+const TASK_STATUSES: Task["status"][] = ["todo", "in-progress", "done"];
+
+const isTask = (value: unknown): value is Task => {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const candidate = value as Record<string, unknown>;
+
+  return (
+    typeof candidate.id === "string" &&
+    typeof candidate.title === "string" &&
+    typeof candidate.description === "string" &&
+    typeof candidate.status === "string" &&
+    TASK_STATUSES.includes(candidate.status as Task["status"]) &&
+    typeof candidate.createdAt === "string" &&
+    typeof candidate.updatedAt === "string"
+  );
+};
 
 const readTasksFromStorage = (): Task[] => {
   const rawTasks = localStorage.getItem(STORAGE_KEY);
@@ -11,8 +30,20 @@ const readTasksFromStorage = (): Task[] => {
   }
 
   try {
-    const parsed = JSON.parse(rawTasks) as Task[];
-    return Array.isArray(parsed) ? parsed : [];
+    const parsed = JSON.parse(rawTasks) as unknown;
+
+    if (!Array.isArray(parsed)) {
+      localStorage.removeItem(STORAGE_KEY);
+      return [];
+    }
+
+    const validTasks = parsed.filter(isTask);
+
+    if (validTasks.length !== parsed.length) {
+      writeTasksToStorage(validTasks);
+    }
+
+    return validTasks;
   } catch {
     localStorage.removeItem(STORAGE_KEY);
     return [];
