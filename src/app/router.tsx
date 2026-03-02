@@ -1,7 +1,7 @@
 import { Navigate, createBrowserRouter, RouterProvider } from "react-router";
-import { ProtectedRoute } from "./ProtectedRoute";
-import { DashboardPage } from "../pages/DashboardPage/DashboardPage";
-import { LoginPage } from "../pages/LoginPage/LoginPage";
+import { ProtectedRoute } from "@/app/ProtectedRoute";
+import { DashboardPage } from "@/pages/DashboardPage/DashboardPage";
+import { LoginPage } from "@/pages/LoginPage/LoginPage";
 
 const router = createBrowserRouter([
   {
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: (
-      <ProtectedRoute isAllowed={true}>
+      <ProtectedRoute>
         <DashboardPage />
       </ProtectedRoute>
     ),
