@@ -1,3 +1,4 @@
+import { LogoutButton } from "@/features/auth/components/LogoutButton";
 import { TaskFilters } from "@/features/tasks/components/TaskFilters";
 import { TaskForm } from "@/features/tasks/components/TaskForm";
 import { TaskList } from "@/features/tasks/components/TaskList";
@@ -12,6 +13,7 @@ export const DashboardPage = () => {
         <Header
           title="Dashboard"
           subtitle="Manage your tasks with filters and status updates."
+          actions={<LogoutButton />}
         />
       }
     >

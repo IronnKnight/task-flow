@@ -1,11 +1,17 @@
 import { useState } from "react";
 import type { SubmitEventHandler } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { createTask, selectTasksStatus } from "@/features/tasks/tasksSlice";
+import {
+  createTask,
+  selectTasksError,
+  selectTasksStatus,
+} from "@/features/tasks/tasksSlice";
+import { Button, Input } from "@/shared/components";
 
 export const TaskForm = () => {
   const dispatch = useAppDispatch();
   const status = useAppSelector(selectTasksStatus);
+  const error = useAppSelector(selectTasksError);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -14,21 +20,25 @@ export const TaskForm = () => {
   const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
-    await dispatch(
-      createTask({
-        title,
-        description,
-      }),
-    );
+    try {
+      await dispatch(
+        createTask({
+          title,
+          description,
+        }),
+      ).unwrap();
 
-    setTitle("");
-    setDescription("");
+      setTitle("");
+      setDescription("");
+    } catch {
+      // Error state is surfaced from Redux via selectTasksError.
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="task-title">Title</label>
-      <input
+      <Input
         id="task-title"
         type="text"
         value={title}
@@ -44,9 +54,11 @@ export const TaskForm = () => {
         placeholder="Optional task details"
       />
 
-      <button type="submit" disabled={isSubmitting}>
+      <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Adding task..." : "Add task"}
-      </button>
+      </Button>
+
+      {status === "error" && error ? <p role="alert">{error}</p> : null}
     </form>
   );
 };

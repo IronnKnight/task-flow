@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { SubmitEventHandler } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { login } from "@/features/auth/authSlice";
+import { Button, Input } from "@/shared/components";
 
 export const LoginForm = () => {
   const dispatch = useAppDispatch();
@@ -18,7 +19,7 @@ export const LoginForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="email">Email</label>
-      <input
+      <Input
         id="email"
         type="email"
         value={email}
@@ -27,9 +28,9 @@ export const LoginForm = () => {
         autoComplete="email"
       />
 
-      <button type="submit" disabled={isLoading}>
+      <Button type="submit" disabled={isLoading}>
         {isLoading ? "Signing in..." : "Sign in"}
-      </button>
+      </Button>
 
       {error ? <p role="alert">{error}</p> : null}
     </form>

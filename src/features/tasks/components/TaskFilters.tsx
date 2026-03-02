@@ -4,6 +4,7 @@ import {
   setTasksFilter,
 } from "@/features/tasks/tasksSlice";
 import type { TasksFilter } from "@/features/tasks/types";
+import { Input } from "@/shared/components";
 
 const FILTER_OPTIONS: TasksFilter[] = ["all", "todo", "in-progress", "done"];
 
@@ -16,7 +17,7 @@ export const TaskFilters = () => {
       <legend>Filter tasks</legend>
       {FILTER_OPTIONS.map((filter) => (
         <label key={filter}>
-          <input
+          <Input
             type="radio"
             name="tasks-filter"
             value={filter}

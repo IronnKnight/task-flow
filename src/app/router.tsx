@@ -6,7 +6,7 @@ import { LoginPage } from "@/pages/LoginPage/LoginPage";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/dashboard" replace />,
   },
   {
     path: "/login",
@@ -19,6 +19,10 @@ const router = createBrowserRouter([
         <DashboardPage />
       </ProtectedRoute>
     ),
+  },
+  {
+    path: "*",
+    element: <Navigate to="/" replace />,
   },
 ]);
 

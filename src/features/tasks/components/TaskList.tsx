@@ -7,6 +7,7 @@ import {
   selectTasksStatus,
 } from "@/features/tasks/tasksSlice";
 import { TaskCard } from "@/features/tasks/components/TaskCard";
+import { Spinner } from "@/shared/components";
 
 export const TaskList = () => {
   const dispatch = useAppDispatch();
@@ -21,10 +22,10 @@ export const TaskList = () => {
   }, [dispatch, status]);
 
   if (status === "loading" && tasks.length === 0) {
-    return <p>Loading tasks...</p>;
+    return <Spinner label="Loading tasks..." />;
   }
 
-  if (status === "error") {
+  if (status === "error" && tasks.length === 0) {
     return <p role="alert">{error ?? "Failed to load tasks."}</p>;
   }
 
@@ -34,6 +35,9 @@ export const TaskList = () => {
 
   return (
     <section>
+      {status === "error" ? (
+        <p role="alert">{error ?? "Some task actions failed."}</p>
+      ) : null}
       {tasks.map((task) => (
         <TaskCard key={task.id} task={task} />
       ))}

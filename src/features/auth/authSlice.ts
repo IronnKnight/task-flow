@@ -5,19 +5,12 @@ import {
   logoutRequest,
 } from "@/features/auth/authAPI";
 import type { AuthState, AuthUser, LoginPayload } from "@/features/auth/types";
+import { getErrorMessage } from "@/shared/utils/getErrorMessage";
 
 const initialState: AuthState = {
   user: null,
   status: "loading",
   error: null,
-};
-
-const toErrorMessage = (error: unknown): string => {
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return "Unexpected auth error";
 };
 
 export const login = createAsyncThunk<AuthUser, LoginPayload>(
@@ -55,7 +48,7 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "error";
-        state.error = toErrorMessage(action.error);
+        state.error = getErrorMessage(action.error, "Unexpected auth error");
       })
       .addCase(logout.pending, (state) => {
         state.status = "loading";
@@ -68,7 +61,7 @@ const authSlice = createSlice({
       })
       .addCase(logout.rejected, (state, action) => {
         state.status = "error";
-        state.error = toErrorMessage(action.error);
+        state.error = getErrorMessage(action.error, "Unexpected auth error");
       })
       .addCase(loadCurrentUser.pending, (state) => {
         state.status = "loading";
@@ -81,7 +74,7 @@ const authSlice = createSlice({
       })
       .addCase(loadCurrentUser.rejected, (state, action) => {
         state.status = "error";
-        state.error = toErrorMessage(action.error);
+        state.error = getErrorMessage(action.error, "Unexpected auth error");
       });
   },
 });
