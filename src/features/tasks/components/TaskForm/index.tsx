@@ -3,41 +3,42 @@ import type { SubmitEventHandler } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import {
   createTask,
+  selectCreateTaskStatus,
   selectTasksError,
-  selectTasksStatus,
 } from "@/features/tasks/tasksSlice";
 import { Button, Input } from "@/shared/components";
+import styles from "@/features/tasks/components/TaskForm/styles.module.css";
 
 export const TaskForm = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector(selectTasksStatus);
+  const createStatus = useAppSelector(selectCreateTaskStatus);
   const error = useAppSelector(selectTasksError);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const isSubmitting = status === "loading";
+  const isSubmitting = createStatus === "loading";
 
   const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
-    try {
-      await dispatch(
-        createTask({
-          title,
-          description,
-        }),
-      ).unwrap();
+    const resultAction = await dispatch(
+      createTask({
+        title,
+        description,
+      }),
+    );
 
+    if (createTask.fulfilled.match(resultAction)) {
       setTitle("");
       setDescription("");
-    } catch {
-      // Error state is surfaced from Redux via selectTasksError.
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="task-title">Title</label>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <label htmlFor="task-title" className={styles.label}>
+        Title
+      </label>
       <Input
         id="task-title"
         type="text"
@@ -46,19 +47,26 @@ export const TaskForm = () => {
         placeholder="Task title"
       />
 
-      <label htmlFor="task-description">Description</label>
+      <label htmlFor="task-description" className={styles.label}>
+        Description
+      </label>
       <textarea
         id="task-description"
+        className={styles.textarea}
         value={description}
         onChange={(event) => setDescription(event.target.value)}
         placeholder="Optional task details"
       />
 
-      <Button type="submit" disabled={isSubmitting}>
+      <Button type="submit" disabled={isSubmitting} className={styles.submit}>
         {isSubmitting ? "Adding task..." : "Add task"}
       </Button>
 
-      {status === "error" && error ? <p role="alert">{error}</p> : null}
+      {createStatus === "error" && error ? (
+        <p role="alert" className={styles.error}>
+          {error}
+        </p>
+      ) : null}
     </form>
   );
 };

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import styles from "@/shared/layout/AppLayout.module.css";
+import styles from "@/shared/layout/AppLayout/styles.module.css";
 
 type AppLayoutProps = {
   header: ReactNode;

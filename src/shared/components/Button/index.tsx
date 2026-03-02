@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import type { ButtonHTMLAttributes } from "react";
-import styles from "@/shared/components/Button.module.css";
+import styles from "@/shared/components/Button/styles.module.css";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 

@@ -1,0 +1,24 @@
+.form {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.submit {
+  margin-top: 0.15rem;
+  justify-self: start;
+}
+
+.error {
+  border: 1px solid color-mix(in srgb, var(--color-danger) 50%, transparent);
+  background: color-mix(in srgb, var(--color-danger) 16%, transparent);
+  color: var(--color-danger);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.5rem;
+  font-size: 0.68rem;
+}
