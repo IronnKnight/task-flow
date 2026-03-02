@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import type { InputHTMLAttributes } from "react";
-import styles from "@/shared/components/Input.module.css";
+import styles from "@/shared/components/Input/styles.module.css";
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement>;
 

@@ -1,0 +1,22 @@
+.page {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.panel {
+  padding: 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: 0 2px 10px rgba(2, 10, 28, 0.2);
+}
+
+@media (min-width: 900px) {
+  .page {
+    gap: 0.85rem;
+  }
+
+  .panel {
+    padding: 0.8rem;
+  }
+}

@@ -1,7 +1,7 @@
 import { Navigate, createBrowserRouter, RouterProvider } from "react-router";
 import { ProtectedRoute } from "@/app/ProtectedRoute";
-import { DashboardPage } from "@/pages/DashboardPage/DashboardPage";
-import { LoginPage } from "@/pages/LoginPage/LoginPage";
+import { DashboardPage } from "@/pages/DashboardPage";
+import { LoginPage } from "@/pages/LoginPage";
 
 const router = createBrowserRouter([
   {

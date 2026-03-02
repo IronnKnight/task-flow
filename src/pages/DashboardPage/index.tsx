@@ -1,10 +1,7 @@
-import { LogoutButton } from "@/features/auth/components/LogoutButton";
-import { TaskFilters } from "@/features/tasks/components/TaskFilters";
-import { TaskForm } from "@/features/tasks/components/TaskForm";
-import { TaskList } from "@/features/tasks/components/TaskList";
-import { AppLayout } from "@/shared/layout/AppLayout";
-import { Header } from "@/shared/layout/Header";
-import styles from "@/pages/DashboardPage/DashboardPage.module.css";
+import { LogoutButton } from "@/features/auth/components";
+import { TaskFilters, TaskForm, TaskList } from "@/features/tasks/components";
+import { AppLayout, Header } from "@/shared/layout";
+import styles from "@/pages/DashboardPage/styles.module.css";
 
 export const DashboardPage = () => {
   return (

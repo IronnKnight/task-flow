@@ -8,6 +8,7 @@ import {
 } from "@/features/tasks/tasksSlice";
 import { TaskCard } from "@/features/tasks/components/TaskCard";
 import { Spinner } from "@/shared/components";
+import styles from "@/features/tasks/components/TaskList/styles.module.css";
 
 export const TaskList = () => {
   const dispatch = useAppDispatch();
@@ -22,21 +23,29 @@ export const TaskList = () => {
   }, [dispatch, status]);
 
   if (status === "loading" && tasks.length === 0) {
-    return <Spinner label="Loading tasks..." />;
+    return <Spinner label="Loading tasks..." className={styles.info} />;
   }
 
   if (status === "error" && tasks.length === 0) {
-    return <p role="alert">{error ?? "Failed to load tasks."}</p>;
+    return (
+      <p role="alert" className={styles.error}>
+        {error ?? "Failed to load tasks."}
+      </p>
+    );
   }
 
   if (tasks.length === 0) {
-    return <p>No tasks found for the selected filter.</p>;
+    return (
+      <p className={styles.info}>No tasks found for the selected filter.</p>
+    );
   }
 
   return (
-    <section>
-      {status === "error" ? (
-        <p role="alert">{error ?? "Some task actions failed."}</p>
+    <section className={styles.list}>
+      {error ? (
+        <p role="alert" className={styles.error}>
+          {error ?? "Some task actions failed."}
+        </p>
       ) : null}
       {tasks.map((task) => (
         <TaskCard key={task.id} task={task} />
