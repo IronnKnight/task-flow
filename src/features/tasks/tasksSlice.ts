@@ -28,7 +28,9 @@ const tasksAdapter = createEntityAdapter<Task>({
 const initialState = tasksAdapter.getInitialState<TasksStateMeta>({
   status: "idle",
   createStatus: "idle",
-  error: null,
+  fetchError: null,
+  createError: null,
+  mutationError: null,
   filter: "all",
   updatingTaskIds: [],
   deletingTaskIds: [],
@@ -68,69 +70,69 @@ const tasksSlice = createSlice({
     builder
       .addCase(fetchTasks.pending, (state) => {
         state.status = "loading";
-        state.error = null;
+        state.fetchError = null;
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
         tasksAdapter.setAll(state, action.payload);
         state.status = "succeeded";
-        state.error = null;
+        state.fetchError = null;
       })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.status = "error";
-        state.error = getErrorMessage(action.error, "Unexpected tasks error");
+        state.fetchError = getErrorMessage(action.error, "Unexpected tasks error");
       })
       .addCase(createTask.pending, (state) => {
         state.createStatus = "loading";
-        state.error = null;
+        state.createError = null;
       })
       .addCase(createTask.fulfilled, (state, action) => {
         tasksAdapter.addOne(state, action.payload);
         state.createStatus = "succeeded";
-        state.error = null;
+        state.createError = null;
       })
       .addCase(createTask.rejected, (state, action) => {
         state.createStatus = "error";
-        state.error = getErrorMessage(action.error, "Unexpected tasks error");
+        state.createError = getErrorMessage(action.error, "Unexpected tasks error");
       })
       .addCase(updateTask.pending, (state, action) => {
         const taskId = action.meta.arg.id;
         if (!state.updatingTaskIds.includes(taskId)) {
           state.updatingTaskIds.push(taskId);
         }
-        state.error = null;
+        state.mutationError = null;
       })
       .addCase(updateTask.fulfilled, (state, action) => {
         tasksAdapter.upsertOne(state, action.payload);
         state.updatingTaskIds = state.updatingTaskIds.filter(
           (taskId) => taskId !== action.payload.id,
         );
-        state.error = null;
+        state.mutationError = null;
       })
       .addCase(updateTask.rejected, (state, action) => {
         state.updatingTaskIds = state.updatingTaskIds.filter(
           (taskId) => taskId !== action.meta.arg.id,
         );
-        state.error = getErrorMessage(action.error, "Unexpected tasks error");
+        state.mutationError = getErrorMessage(action.error, "Unexpected tasks error");
       })
       .addCase(deleteTask.pending, (state, action) => {
         const taskId = action.meta.arg;
         if (!state.deletingTaskIds.includes(taskId)) {
           state.deletingTaskIds.push(taskId);
         }
-        state.error = null;
+        state.mutationError = null;
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         tasksAdapter.removeOne(state, action.payload);
         state.deletingTaskIds = state.deletingTaskIds.filter(
           (taskId) => taskId !== action.payload,
         );
-        state.error = null;
+        state.mutationError = null;
       })
       .addCase(deleteTask.rejected, (state, action) => {
         state.deletingTaskIds = state.deletingTaskIds.filter(
           (taskId) => taskId !== action.meta.arg,
         );
-        state.error = getErrorMessage(action.error, "Unexpected tasks error");
+        state.mutationError = getErrorMessage(action.error, "Unexpected tasks error");
       });
   },
 });
@@ -138,12 +140,13 @@ const tasksSlice = createSlice({
 const tasksSelectors = tasksAdapter.getSelectors<RootState>((state) => state.tasks);
 
 export const selectAllTasks = tasksSelectors.selectAll;
-export const selectTaskById = tasksSelectors.selectById;
-export const selectTasksIds = tasksSelectors.selectIds;
 export const selectTasksStatus = (state: RootState): TasksStateMeta["status"] => state.tasks.status;
 export const selectCreateTaskStatus = (state: RootState): TasksStateMeta["createStatus"] =>
   state.tasks.createStatus;
-export const selectTasksError = (state: RootState): string | null => state.tasks.error;
+export const selectTasksFetchError = (state: RootState): string | null => state.tasks.fetchError;
+export const selectCreateTaskError = (state: RootState): string | null => state.tasks.createError;
+export const selectTasksMutationError = (state: RootState): string | null =>
+  state.tasks.mutationError;
 export const selectTasksFilter = (state: RootState): TasksFilter => state.tasks.filter;
 export const selectIsTaskUpdating = (state: RootState, taskId: string): boolean =>
   state.tasks.updatingTaskIds.includes(taskId);

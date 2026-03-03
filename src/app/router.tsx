@@ -1,5 +1,5 @@
 import { Navigate, createBrowserRouter, RouterProvider } from "react-router";
-import { ProtectedRoute } from "@/app/ProtectedRoute";
+import { GuestRoute, ProtectedRoute } from "@/app/routes";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { LoginPage } from "@/pages/LoginPage";
 
@@ -10,7 +10,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LoginPage />,
+    element: (
+      <GuestRoute>
+        <LoginPage />
+      </GuestRoute>
+    ),
   },
   {
     path: "/dashboard",

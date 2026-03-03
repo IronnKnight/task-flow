@@ -1,73 +1,93 @@
-# React + TypeScript + Vite
+# Task Flow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Task Flow is a feature-oriented React application for authenticated task management.
+It includes login/logout, task CRUD, status filters, route guards, and persistent local storage.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19 + TypeScript
+- Vite 7
+- Redux Toolkit + React Redux
+- React Router
+- CSS Modules + global design tokens (`src/styles/globals.css`)
+- ESLint (flat config)
 
-## React Compiler
+## Core Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Email-based login flow (mocked) with persisted session.
+- Protected dashboard route and guest-only login route.
+- Create, update status, filter, and delete tasks.
+- Task data persistence in `localStorage`.
+- Runtime validation of persisted auth/task payloads to guard against corrupted storage.
+- Granular async UX states:
+  - fetch state for initial list loading
+  - create state for form submission
+  - per-task update/delete loading controls
+  - operation-scoped error surfaces (`fetchError`, `createError`, `mutationError`)
 
-## Expanding the ESLint configuration
+## Routing
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Defined in `src/app/router.tsx`:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- `/` -> redirects to `/dashboard`
+- `/login` -> wrapped by `GuestRoute`
+- `/dashboard` -> wrapped by `ProtectedRoute`
+- `*` -> redirects to `/`
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Route guards are organized in `src/app/routes` with a barrel export.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Architecture
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The project follows a feature-first structure:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `src/app` - app shell (router, providers, store, typed hooks, route guards)
+- `src/features/auth` - auth domain (API, slice, types, UI components)
+- `src/features/tasks` - tasks domain (API, slice, types, UI components)
+- `src/pages` - page composition (`LoginPage`, `DashboardPage`)
+- `src/shared` - reusable UI/layout/utilities (`Button`, `Input`, `Spinner`, `AppLayout`, `Header`, helpers)
+- `src/styles` - global CSS variables and base styles
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Barrel exports are used in feature and shared layers for cleaner imports.
+
+## State Management Notes
+
+- Store setup lives in `src/app/store.ts` with two slices: `auth`, `tasks`.
+- `AppProviders` dispatches `loadCurrentUser` on mount to restore auth state.
+- Tasks use `createEntityAdapter` for normalized list handling.
+- Async workflows are modeled via `createAsyncThunk` in both domains.
+
+## Local Storage Behavior
+
+- Auth key: `task-flow-auth-user`
+- Tasks key: `task-flow-tasks`
+- Stored data is validated with type predicates before use.
+- Invalid payloads are discarded and cleaned from storage.
+
+## UI/Styling
+
+- Dark-first design token system is defined in `src/styles/globals.css`.
+- Components use CSS Modules for scoped styling.
+- Shared primitives (`Button`, `Input`, `Spinner`) are reused across features.
+
+## Scripts
+
+- `npm run dev` - start local dev server
+- `npm run build` - type-check and production build
+- `npm run lint` - run ESLint
+- `npm run preview` - preview production build locally
+
+## Getting Started
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start development server:
+
+   ```bash
+   npm run dev
+   ```
+
+3. Open the local URL shown in terminal (typically `http://localhost:5173`).
