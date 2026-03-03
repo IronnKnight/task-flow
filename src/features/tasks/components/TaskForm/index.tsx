@@ -3,8 +3,8 @@ import type { SubmitEventHandler } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import {
   createTask,
+  selectCreateTaskError,
   selectCreateTaskStatus,
-  selectTasksError,
 } from "@/features/tasks/tasksSlice";
 import { Button, Input } from "@/shared/components";
 import styles from "@/features/tasks/components/TaskForm/styles.module.css";
@@ -12,7 +12,7 @@ import styles from "@/features/tasks/components/TaskForm/styles.module.css";
 export const TaskForm = () => {
   const dispatch = useAppDispatch();
   const createStatus = useAppSelector(selectCreateTaskStatus);
-  const error = useAppSelector(selectTasksError);
+  const error = useAppSelector(selectCreateTaskError);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 

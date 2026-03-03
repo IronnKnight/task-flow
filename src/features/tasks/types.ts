@@ -25,7 +25,9 @@ export type TasksFilter = "all" | TaskStatus;
 export type TasksStateMeta = {
   status: "idle" | "loading" | "succeeded" | "error";
   createStatus: "idle" | "loading" | "succeeded" | "error";
-  error: string | null;
+  fetchError: string | null;
+  createError: string | null;
+  mutationError: string | null;
   filter: TasksFilter;
   updatingTaskIds: string[];
   deletingTaskIds: string[];

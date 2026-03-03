@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import {
   fetchTasks,
   selectFilteredTasks,
-  selectTasksError,
+  selectTasksFetchError,
+  selectTasksMutationError,
   selectTasksStatus,
 } from "@/features/tasks/tasksSlice";
 import { TaskCard } from "@/features/tasks/components/TaskCard";
@@ -13,7 +14,8 @@ import styles from "@/features/tasks/components/TaskList/styles.module.css";
 export const TaskList = () => {
   const dispatch = useAppDispatch();
   const status = useAppSelector(selectTasksStatus);
-  const error = useAppSelector(selectTasksError);
+  const fetchError = useAppSelector(selectTasksFetchError);
+  const mutationError = useAppSelector(selectTasksMutationError);
   const tasks = useAppSelector(selectFilteredTasks);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export const TaskList = () => {
   if (status === "error" && tasks.length === 0) {
     return (
       <p role="alert" className={styles.error}>
-        {error ?? "Failed to load tasks."}
+        {fetchError ?? "Failed to load tasks."}
       </p>
     );
   }
@@ -42,9 +44,9 @@ export const TaskList = () => {
 
   return (
     <section className={styles.list}>
-      {error ? (
+      {mutationError ? (
         <p role="alert" className={styles.error}>
-          {error ?? "Some task actions failed."}
+          {mutationError ?? "Some task actions failed."}
         </p>
       ) : null}
       {tasks.map((task) => (
