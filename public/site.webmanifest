@@ -1,0 +1,7 @@
+{
+  "name": "Task Flow",
+  "short_name": "TaskFlow",
+  "theme_color": "#0a0a0a",
+  "background_color": "#0a0a0a",
+  "display": "standalone"
+}
