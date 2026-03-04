@@ -64,7 +64,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
           type="button"
           onClick={handleDelete}
           className={styles.delete}
-          disabled={isDeleting}
+          disabled={isDeleting || isUpdating}
         >
           {isDeleting ? "Deleting..." : "Delete"}
         </Button>
